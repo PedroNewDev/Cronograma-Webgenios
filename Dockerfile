@@ -1,11 +1,4 @@
-# Stage 1: Install dependencies
-FROM node:22-alpine AS deps
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --only=production --frozen-lockfile
-
-# Stage 2: Build the application
+# Stage 1: Build the application
 FROM node:22-alpine AS builder
 WORKDIR /app
 
@@ -17,7 +10,7 @@ RUN npm ci --frozen-lockfile
 COPY . .
 RUN npm run build
 
-# Stage 3: Production runner (minimal image)
+# Stage 2: Production runner (minimal image)
 FROM node:22-alpine AS runner
 WORKDIR /app
 

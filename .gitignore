@@ -7,7 +7,6 @@ dist
 .env.local
 .env.*.local
 .env.docker
-infra/.env.docker
 *.log
 .DS_Store
 .vscode
