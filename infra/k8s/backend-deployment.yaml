@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wg-command-deployment
+  labels:
+    app: wg-command
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wg-command
+  template:
+    metadata:
+      labels:
+        app: wg-command
+    spec:
+      containers:
+        - name: wg-command
+          image: seunome/wg-command:v1.0.0
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: app-config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DATABASE_URL
+            - name: BETTER_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: BETTER_AUTH_SECRET

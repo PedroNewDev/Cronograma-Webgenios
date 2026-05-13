@@ -80,10 +80,19 @@ export async function createTask(formData: FormData) {
 /** Move task entre colunas (drag-drop). */
 export async function moveTask(taskId: string, status: TaskStatus) {
   const { id: orgId } = await getActiveOrg();
+
+  const [moved] = await db
+    .select({ funnelId: task.funnelId })
+    .from(task)
+    .where(and(eq(task.id, taskId), eq(task.organizationId, orgId)))
+    .limit(1);
+
   await db
     .update(task)
     .set({ status, updatedAt: new Date() })
     .where(and(eq(task.id, taskId), eq(task.organizationId, orgId)));
+
+  if (moved) revalidatePath(`/f/${moved.funnelId}`);
 }
 
 /** Deleta task. */
